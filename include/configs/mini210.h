@@ -139,7 +139,7 @@
 
 /* the PWM TImer 4 uses a counter of 41687 for 10 ms, so we need */
 /* it to wrap 100 times (total 4168750) to get 1 sec. */
-#define CONFIG_SYS_HZ			1000		// at PCLK 66MHz
+#define CONFIG_SYS_HZ			2000000		// Not completely correct, but closer
 
 /* valid baudrates */
 #define CONFIG_SYS_BAUDRATE_TABLE	{ 9600, 19200, 38400, 57600, 115200 }
@@ -384,6 +384,33 @@
 
 /* MMC SPL */
 #define CONFIG_SPL
+
+/* NAND */
+#define CONFIG_NAND
+#define CONFIG_SYS_MAX_NAND_DEVICE	1
+#define CONFIG_SYS_NAND_BASE 0
+#define CONFIG_SYS_NAND_5_ADDR_CYCLE
+
+#define CONFIG_NAND_PLAT
+
+#define NAND_PLAT_WRITE_CMD(chip, cmd) writeb(cmd, 0xB0E00008)
+#define NAND_PLAT_WRITE_ADR(chip, adr) writeb(adr, 0xB0E0000C)
+#define NAND_PLAT_DEV_READY(chip)      ((readl(0xB0E00028) & 0x01) == 1)
+
+#define NAND_PLAT_INIT()									\
+{															\
+	int nfcont = readl(0xB0E00004);							\
+	nfcont = (nfcont & ~(1<<16)) | (1<<0) | 0xC00006; 		\
+	/* Always enable chip 0 */ 								\
+	nfcont &= ~0x02;										\
+	writel(nfcont, 0xB0E00004);								\
+															\
+	nand->IO_ADDR_R		= (void __iomem *)0xB0E00010;		\
+	nand->IO_ADDR_W		= (void __iomem *)0xB0E00010;		\
+}
+	
+
+#define CONFIG_CMD_NAND
 
 /* DM9000 Ethernet */
 #define DM9000_16BIT_DATA
