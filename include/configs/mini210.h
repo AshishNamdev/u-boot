@@ -101,7 +101,7 @@
 
 /* SD/MMC configuration */
 #define CONFIG_GENERIC_MMC		1
-#define CONFIG_MMC			1
+#define CONFIG_MMC				1
 #define CONFIG_S5P_MMC			1
 
 /* PWM */
@@ -118,6 +118,8 @@
 #define CONFIG_CMD_DHCP
 #define CONFIG_CMD_MMC
 #define CONFIG_CMD_FAT
+#define CONFIG_CMD_EXT2
+#define CONFIG_CMD_MTDPARTS
 
 #define CONFIG_BOOTDELAY		3
 #define CONFIG_ZERO_BOOTDELAY_CHECK
@@ -173,6 +175,7 @@
 #define RESERVE_BLOCK_SIZE              (512)
 #define BL1_SIZE                        (8 << 10) /*8 K reserved for BL1*/
 #define CONFIG_ENV_OFFSET               (RESERVE_BLOCK_SIZE + BL1_SIZE + ((16 + 512) * 1024))
+#define CONFIG_PARTITIONS			1
 #define CONFIG_DOS_PARTITION		1
 
 #if 0
@@ -386,11 +389,21 @@
 #define CONFIG_SPL
 
 /* NAND */
+#define CONFIG_MTD_DEVICE
+#define CONFIG_MTD_PARTITIONS
+
 #define CONFIG_NAND
 #define CONFIG_SYS_MAX_NAND_DEVICE	1
 #define CONFIG_SYS_NAND_BASE 0
 #define CONFIG_SYS_NAND_5_ADDR_CYCLE
 
+#define CONFIG_NAND_S3C8BIT
+#define CONFIG_SYS_S3C_NAND_HWECC
+#define CONFIG_SYS_NAND_ECCSIZE		512
+#define CONFIG_SYS_NAND_ECCSTEPS	4
+#define CONFIG_SYS_NAND_ECCBYTES	13
+
+#if 0
 #define CONFIG_NAND_PLAT
 
 #define NAND_PLAT_WRITE_CMD(chip, cmd) writeb(cmd, 0xB0E00008)
@@ -408,7 +421,7 @@
 	nand->IO_ADDR_R		= (void __iomem *)0xB0E00010;		\
 	nand->IO_ADDR_W		= (void __iomem *)0xB0E00010;		\
 }
-	
+#endif
 
 #define CONFIG_CMD_NAND
 

@@ -1014,16 +1014,18 @@ typedef enum {
 #define NFCONF_ECC_8BIT			(1<<23)
 
 #define NFCONT_ECC_ENC			(1<<18)
-#define NFCONT_WP			(1<<16)
+#define NFCONT_WP				(1<<16)
 #define NFCONT_MECCLOCK			(1<<7)
 #define NFCONT_SECCLOCK			(1<<6)
 #define NFCONT_INITMECC			(1<<5)
 #define NFCONT_INITSECC			(1<<4)
 #define NFCONT_INITECC			(NFCONT_INITMECC | NFCONT_INITSECC)
-#define NFCONT_CS			(1<<1)
+#define NFCONT_CS				(1<<1)
+#define NFCONT_ENABLE			(1<<0)
+
 #define NFSTAT_ECCENCDONE		(1<<25)
 #define NFSTAT_ECCDECDONE		(1<<24)
-#define NFSTAT_RnB			(1<<0)
+#define NFSTAT_RnB				(1<<0)
 #define NFESTAT0_ECCBUSY		(1<<31)
 
 
