@@ -30,7 +30,7 @@ COBJS	:= mini210.o
 endif
 
 ifdef CONFIG_SPL_BUILD
-COBJS  += mmc_boot.o
+COBJS  += nand_boot.o
 endif
 
 SOBJS	:= lowlevel_init.o mem_setup.o
@@ -53,6 +53,7 @@ ifdef CONFIG_SPL_BUILD
 $(OBJTREE)/tools/mk$(BOARD)spl: tools/mkv210_image.c
 	$(HOSTCC) tools/mkv210_image.c -o $(OBJTREE)/tools/mk$(BOARD)spl
 endif
+
 
 #########################################################################
 
