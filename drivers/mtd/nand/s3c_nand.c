@@ -402,7 +402,7 @@ int board_nand_init(struct nand_chip *nand)
 	nand->dev_ready		= s3c_nand_device_ready;
 	nand->select_chip	= s3c_nand_select_chip;
 	nand->options		= 0;
-#ifdef CONFIG_NAND_SPL
+#ifdef CONFIG_SPL_BUILD
 	nand->read_byte		= nand_read_byte;
 	nand->write_buf		= nand_write_buf;
 	nand->read_buf		= nand_read_buf;
