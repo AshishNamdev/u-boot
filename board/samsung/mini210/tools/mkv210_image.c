@@ -2,12 +2,12 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define BUFSIZE                 (8*1024)
-#define IMG_SIZE                (8*1024)
+#define BUFSIZE                 (16*1024)
+#define IMG_SIZE                (16*1024)
 #define SPL_HEADER_SIZE         16
 //#define FILE_PERM               (S_IRUSR | S_IWUSR | S_IRGRP \
                                 | S_IWGRP | S_IROTH | S_IWOTH)
-#define SPL_HEADER              "S5PC110 HEADER  "
+unsigned char SPL_HEADER[SPL_HEADER_SIZE] = "S5PV210\0\0\0\0\0\0\0\0";
 
 int main (int argc, char *argv[])
 {
