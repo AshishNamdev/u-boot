@@ -168,14 +168,20 @@
 #undef CONFIG_CMD_IMLS
 #define CONFIG_IDENT_STRING	" for FriendlyARM-MINI210"
 
-#define CONFIG_ENV_IS_IN_MMC		1
-#define CONFIG_SYS_MMC_ENV_DEV		0
-#define CONFIG_ENV_SIZE		0x4000	/* 16KB */
-#define RESERVE_BLOCK_SIZE              (512)
-#define BL1_SIZE                        (8 << 10) /*8 K reserved for BL1*/
-#define CONFIG_ENV_OFFSET               (RESERVE_BLOCK_SIZE + BL1_SIZE + ((16 + 512) * 1024))
+#define BL1_SIZE					(16 * 1024)
+#define NAND_BOOT_SIZE				(384 * 1024) /* 3 Erase blocks for u-boot + spl */
+#define CONFIG_SYS_NAND_U_BOOT_OFFS	BL1_SIZE
+#define CONFIG_SYS_NAND_U_BOOT_SIZE	(NAND_BOOT_SIZE - BL1_SIZE)
+#define CONFIG_SYS_NAND_U_BOOT_DST	CONFIG_SYS_TEXT_BASE
+#define CONFIG_SYS_NAND_U_BOOT_START CONFIG_SYS_TEXT_BASE
+
+#define CONFIG_ENV_IS_IN_NAND		1
+#define CONFIG_ENV_SIZE				0x20000		 /* 128KB */
+#define CONFIG_ENV_OFFSET			NAND_BOOT_SIZE
 #define CONFIG_PARTITIONS			1
 #define CONFIG_DOS_PARTITION		1
+
+
 
 #if 0
 //#define CONFIG_CLK_667_166_166_133
