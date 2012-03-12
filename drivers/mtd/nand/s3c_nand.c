@@ -42,8 +42,9 @@
 #define MAX_CHIPS	2
 static int nand_cs[MAX_CHIPS] = {0, 1};
 
-#ifdef CONFIG_NAND_SPL
+#ifdef CONFIG_SPL_BUILD
 #define printf(arg...) do {} while (0)
+#define get_timer(x)   0
 #endif
 
 static struct nand_ecclayout s3c_64_8bit = {
