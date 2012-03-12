@@ -41,6 +41,20 @@ _TEXT_BASE:
 lowlevel_init:
 	push	{lr}
 
+	ldr	r0, =ELFIN_GPIO_BASE
+
+	/* Happy smily LEDs */
+	ldr r1, [r0, #GPJ2CON_OFFSET]
+	ldr r2, =0xFFFF
+	bic r1, r1, r2
+	ldr r2, =0x1111
+	orr r1, r1, r2
+	str r1, [r0, #GPJ2CON_OFFSET]
+
+	ldr r1, [r0, #GPJ2DAT_OFFSET]
+	bic r1, r1, #0x0F
+	str r1, [r0, #GPJ2DAT_OFFSET]
+
 	/* check reset status  */
 
 	ldr	r0, =(ELFIN_CLOCK_POWER_BASE+RST_STAT_OFFSET)
