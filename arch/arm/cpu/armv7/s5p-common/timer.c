@@ -72,11 +72,11 @@ void __udelay(unsigned long usec)
 		 * 3. finish normalize.
 		 */
 		tmo = usec / 1000;
-		tmo *= (CONFIG_SYS_HZ * count_value / 10);
+		tmo *= CONFIG_SYS_HZ;
 		tmo /= 1000;
 	} else {
 		/* else small number, don't kill it prior to HZ multiply */
-		tmo = usec * CONFIG_SYS_HZ * count_value / 10;
+		tmo = usec * CONFIG_SYS_HZ;
 		tmo /= (1000 * 1000);
 	}
 

@@ -139,9 +139,7 @@
 #define CONFIG_SYS_MEMTEST_END		(MEMORY_BASE_ADDRESS + 0x3E00000)		/* 256 MB in DRAM	*/
 #define CONFIG_SYS_LOAD_ADDR		(PHYS_SDRAM_2 + 0x1000000)	/* default load address	*/
 
-/* the PWM TImer 4 uses a counter of 41687 for 10 ms, so we need */
-/* it to wrap 100 times (total 4168750) to get 1 sec. */
-#define CONFIG_SYS_HZ			2000000		// Not completely correct, but closer
+#define CONFIG_SYS_HZ			2084375	/* Actual clock rate of PWM4 - anyone calling get_timer() needs it */
 
 /* valid baudrates */
 #define CONFIG_SYS_BAUDRATE_TABLE	{ 9600, 19200, 38400, 57600, 115200 }
