@@ -180,8 +180,10 @@
 #define CONFIG_ENV_OFFSET			NAND_BOOT_SIZE
 #define CONFIG_PARTITIONS			1
 #define CONFIG_DOS_PARTITION		1
-
-
+#define CONFIG_CMD_UBIFS			1
+#define CONFIG_CMD_UBI				1
+#define CONFIG_RBTREE				1
+#define CONFIG_LZO					1
 
 #if 0
 //#define CONFIG_CLK_667_166_166_133
