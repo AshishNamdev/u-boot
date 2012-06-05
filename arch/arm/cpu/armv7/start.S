@@ -177,7 +177,6 @@ relocate_code:
 	mov	r4, r0	/* save addr_sp */
 	mov	r5, r1	/* save addr of gd */
 	mov	r6, r2	/* save addr of destination */
-
 	/* Set up the stack						    */
 stack_setup:
 	mov	sp, r4
@@ -259,9 +258,8 @@ clear_bss:
 #endif
 	mov	r2, #0x00000000		/* clear			    */
 
-clbss_l:str	r2, [r0]		/* clear loop...		    */
-	add	r0, r0, #4
-	cmp	r0, r1
+clbss_l:cmp	r0, r1
+	strne	r2, [r0], #4		/* clear loop...		    */
 	bne	clbss_l
 
 /*
