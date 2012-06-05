@@ -36,12 +36,22 @@ _TEXT_BASE:
 lowlevel_init:	
 	push	{lr}
 
+	/* If this is u-boot re-initing after SPL, don't bother */
+	ldr	r0, =0xE010F00C @INFORM6
+	ldr	r1, =0x0000bead
+	ldr	r2, [r0]
+	cmp	r1, r2
+	ldr	r1, =0
+	str	r1, [r0]
+	popeq	{pc}
+
 	bl	leds_on
 	bl	uart_asm_init
 	bl	clocks_to_max
 	bl	init_dram
 
-	bl 	dump_lr
+	adr	r0, boot_msg
+	bl	uart_asm_puts
 	
 	pop	{pc}
 
@@ -101,9 +111,10 @@ clocks_to_max:
 1:	subs	r1, #1
 	bne	1b
 
+#ifdef DEBUG
 	adr	r0, clk_msg
 	bl	uart_asm_puts
-
+#endif
 
 	pop	{pc}
 	
@@ -129,8 +140,10 @@ uart_asm_init:
 	ldr	r1, =0xDDDD
 	str	r1, [r0, #0x2c]
 
+#ifdef DEBUG
 	adr	r0, spl_msg
 	bl	uart_asm_puts
+#endif
 
 	pop	{pc}
 
@@ -143,29 +156,6 @@ uart_asm_puts:
 	and	r2, r2, #0xFF
 	str	r2, [r1, #0x20]
 	b	1b
-
-dump_lr:
-	ldr	r1, =S5PC110_UART_BASE
-	mov	r2, #28
-	
-1:	lsr	r0, pc, r2
-	and	r0, r0, #0xF
-	cmp	r0, #0xa
-	addlt	r0, r0, #'0'
-	subge	r0, r0, #0xa
-	addge	r0, r0, #'A'
-	str	r0, [r1, #0x20]
-
-	sub	r2, r2, #4
-	cmp	r2, #-4
-	bne	1b
-	
-	mov	r0, #'\r'
-	str	r0, [r1, #0x20]
-	mov	r0, #'\n'
-	str	r0, [r1, #0x20]
-	mov	pc, lr
-	
 
 #define DMC0_CONCONTROL		0x00
 #define DMC0_MEMCONTROL 	0x04
@@ -280,9 +270,10 @@ init_dram:
 	ldr	r1, =0xFFFF00FF			@PwrdnConfig
 	str	r1, [r0, #DMC0_PWRDNCONFIG]
 
+#ifdef DEBUG
 	adr	r0, ram_msg
 	bl	uart_asm_puts
-
+#endif
 	pop	{pc}
 
 minidram_test:
@@ -315,7 +306,9 @@ minidram_test:
 	
 spin:	b	spin
 
-
+boot_msg:
+	.asciz "Booty, Booty Boot!\r\n"
+	.align
 spl_msg:
 	.asciz "UART Initialised\r\n"
 	.align
