@@ -35,14 +35,12 @@
 #define CONFIG_S5PC110			1	/* which is in a S5PC110 SoC */
 #define CONFIG_TINY210			1
 #define CONFIG_MACH_TYPE		MACH_TYPE_TINY210
+#define MACH_TYPE_TINY210		2456
 
 /* SPL controls */
 #define CONFIG_SPL			1
-#define CONFIG_SPL_MMC_SUPPORT		1
-#define CONFIG_SPL_LIBCOMMON_SUPPORT	1
-#define CONFIG_SPL_LIBGENERIC_SUPPORT	1
-#define CONFIG_SPL_LIBDISK_SUPPORT	1
-
+#define CONFIG_SPL_UBOOT_OFS		(((512 + (16 * 1024) + (CONFIG_ENV_SIZE)) / 512) + 1)
+#define CONFIG_SPL_UBOOT_SIZ		(512 * 1024 / 512)
 #include <asm/arch/cpu.h>		/* get chip and board defs */
 
 #define CONFIG_ARCH_CPU_INIT
@@ -57,8 +55,6 @@
 #define CONFIG_SYS_TEXT_BASE            0x23E00000
 #define CONFIG_SPL_TEXT_BASE		0xD0020010
 #define CONFIG_SYS_INIT_SP_ADDR 	(CONFIG_SYS_LOAD_ADDR - GENERATED_GBL_DATA_SIZE)
-#define CONFIG_SYS_SPL_MALLOC_SIZE	(128 * 1024)
-#define CONFIG_SYS_SPL_MALLOC_START	(PHYS_SDRAM_1 + PHYS_SDRAM_1_SIZE - CONFIG_SYS_SPL_MALLOC_SIZE)
 #define MEMORY_BASE_ADDRESS		CONFIG_SYS_SDRAM_BASE
 
 
@@ -77,10 +73,13 @@
 
 #define CONFIG_SYS_NO_FLASH		1
 #undef  CONFIG_CMD_IMLS
-#define CONFIG_IDENT_STRING		" for FriendlyARM-TINY210"
+#define CONFIG_IDENT_STRING		" for Indicomm TINY210SDK Bootstrap"
 
-#define CONFIG_ENV_IS_NOWHERE		1
+
+#define CONFIG_ENV_IS_IN_MMC		1
 #define CONFIG_ENV_SIZE			0x20000					/* 128KB */
+#define CONFIG_SYS_MMC_ENV_DEV		0
+#define CONFIG_ENV_OFFSET		(512 + (16 * 1024))			/* After the DOS partition table and SPL loader */
 
 #define CONFIG_SYS_HZ			2084375					/* Actual clock rate of PWM4 - anyone calling get_timer() needs it */
 
@@ -91,6 +90,10 @@
 #define CONFIG_SYS_BAUDRATE_TABLE	{ 9600, 19200, 38400, 57600, 115200 }
 
 /* Miscellaneous configurable options */
+#define CONFIG_SETUP_MEMORY_TAGS
+#define CONFIG_CMDLINE_TAG
+#define CONFIG_INITRD_TAG
+#define CONFIG_CMDLINE_EDITING
 #define CONFIG_SYS_LONGHELP							/* undef to save memory */
 #define CONFIG_SYS_HUSH_PARSER							/* use "hush" command parser    */
 #define CONFIG_SYS_PROMPT_HUSH_PS2	"> "
@@ -107,12 +110,29 @@
 #define CONFIG_PWM			1
 #define CONFIG_GENERIC_MMC		1
 #define CONFIG_MMC			1
+#define CONFIG_MTD_DEVICE		1
+#define CONFIG_PARTITIONS		1
+#define CONFIG_MTD_PARTITIONS		1
 #define CONFIG_DOS_PARTITION		1
 #define CONFIG_S5P_MMC			1
+#define CONFIG_BOOTDELAY		1
 
+/* DM9000 Ethernet */
+#define DM9000_16BIT_DATA		1
+#define CONFIG_DRIVER_DM9000		1
+#define CONFIG_NET_MULTI		1
+#define CONFIG_NET_RETRY_COUNT		10
+#define CONFIG_DM9000_NO_SROM		1
+#define CONFIG_DM9000_BASE		(0x88000000)
+#define DM9000_IO			(CONFIG_DM9000_BASE)
+#define DM9000_DATA			(CONFIG_DM9000_BASE+0x8)
 
 /* Command Support */
 #include <config_cmd_default.h>
 #define CONFIG_CMD_MMC			1
 #define CONFIG_CMD_FAT			1
+#define CONFIG_CMD_EXT2			1
+#undef CONFIG_CMD_IMLS
+
+
 #endif
