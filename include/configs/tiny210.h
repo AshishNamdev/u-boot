@@ -104,8 +104,6 @@
 /* Boot Argument Buffer Size */
 #define CONFIG_SYS_BARGSIZE		CONFIG_SYS_CBSIZE
 
-#define BOARD_LATE_INIT
-
 /* Drivers */
 #define CONFIG_PWM			1
 #define CONFIG_GENERIC_MMC		1
