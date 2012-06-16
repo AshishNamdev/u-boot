@@ -64,7 +64,7 @@ static struct nand_ecclayout s5p_64_8bit = {
 };
 
 /* Nand flash definition values by jsgood */
-#ifdef s5p_NAND_DEBUG
+#ifdef S5P_NAND_DEBUG
 /*
  * Function to print out oob buffer for debugging
  * Written by jsgood
@@ -81,7 +81,7 @@ static void print_oob(const char *header, struct mtd_info *mtd)
 
 	printf("\n");
 }
-#endif /* s5p_NAND_DEBUG */
+#endif /* S5P_NAND_DEBUG */
 
 static void s5p_nand_select_chip(struct mtd_info *mtd, int chip)
 {
@@ -111,7 +111,7 @@ static void s5p_nand_select_chip(struct mtd_info *mtd, int chip)
 static void s5p_nand_hwcontrol(struct mtd_info *mtd, int cmd, unsigned int ctrl)
 {
 	struct nand_chip *this = mtd->priv;
-
+	
 	if (ctrl & NAND_CTRL_CHANGE) {
 		if (ctrl & NAND_CLE)
 			this->IO_ADDR_W = (void __iomem *)&s5p_nand_regs->nfcmd;
@@ -242,8 +242,7 @@ static int s5p_nand_calculate_ecc(struct mtd_info *mtd, const u_char *dat,
 	s5p_nand_wait_enc();
 
 	for (i = 0; i <= 12; i += 4) {
-
-		parity = readl(s5p_nand_regs->nfeccprgecc[i / 4]);
+		parity = readl(&s5p_nand_regs->nfeccprgecc[i / 4]);
 		ecc_code[i] = parity & 0xff;
 		ecc_code[i + 1] = (parity >> 8) & 0xff;
 		if (i < 12) {
@@ -258,7 +257,6 @@ static int s5p_nand_calculate_ecc(struct mtd_info *mtd, const u_char *dat,
 	printf("ECC: 0x%02x 0x%02x 0x%02x 0x%02x\n", ecc_code[8], ecc_code[9], ecc_code[10], ecc_code[11]);
 	printf("ECC: 0x%02x 0x%02x\n", ecc_code[12], ecc_code[13]);
 	*/
-
 	return 0;
 }
 
@@ -441,7 +439,7 @@ int board_nand_init(struct nand_chip *nand)
 	nand->ecc.calculate	= s5p_nand_calculate_ecc;
 	nand->ecc.correct	= s5p_nand_correct_data;
 	nand->ecc.layout	= &s5p_64_8bit;
-	nand->ecc.read_page = nand_read_page_hwecc_oob_first;
+	nand->ecc.read_page 	= nand_read_page_hwecc_oob_first;
 
 	/*
 	 * If you get more than 1 NAND-chip with different page-sizes on the
