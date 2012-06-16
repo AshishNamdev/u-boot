@@ -70,7 +70,7 @@ int board_late_init (void)
 #ifdef CONFIG_DISPLAY_BOARDINFO
 int checkboard(void)
 {
-	printf("\nBoard:   TINY210SDK Indicomm Bootstrapper\n");
+	printf("\nBoard:   %s\n", CONFIG_BOARD_NAME);
 	return (0);
 }
 #endif
