@@ -47,6 +47,7 @@ lowlevel_init:
 
 	bl	leds_on
 	bl	uart_asm_init
+	bl	nand_asm_init
 	bl	clocks_to_max
 	bl	init_dram
 
@@ -156,6 +157,94 @@ uart_asm_puts:
 	and	r2, r2, #0xFF
 	str	r2, [r1, #0x20]
 	b	1b
+
+/*
+ * Initialise NAND device
+ */
+
+#define MP01CON_OFFSET	0x2e0
+#define MP01PUD_OFFSET	0x2e8
+#define MP03CON_OFFSET	0x320
+#define MP03PUD_OFFSET	0x328
+#define NFCONF_OFFSET	0x000
+#define NFCONT_OFFSET	0x004
+
+#define NFCONF_VAL	  (7 << 12) \
+			| (7 <<  8) \
+			| (7 <<  4) \
+			| (0 <<  3) \
+			| (0 <<  2) \
+			| (1 <<  1) \
+			| (0 <<  0)
+
+#define NFCONT_VAL	  (1 << 23) \
+			| (1 << 22) \
+			| (0 << 18) \
+			| (0 << 17) \
+			| (0 << 16) \
+			| (0 << 10) \
+			| (0 <<  9) \
+			| (0 <<  8) \
+			| (0 <<  7) \
+			| (0 <<  6) \
+			| (2 <<  1) \
+			| (1 <<  0)
+
+nand_asm_init:
+	push	{lr}
+
+	ldr	r0, =S5PC110_GPIO_BASE
+
+	ldr	r1, [r0, #MP01CON_OFFSET]
+	bic	r1, r1, #(0xf<<8)
+	orr	r1, r1, #(0x3<<8)
+	str	r1, [r0, #MP01CON_OFFSET]
+
+	ldr	r1, [r0, #MP01PUD_OFFSET]
+	bic	r1, r1, #(0x3<<4)
+	str	r1, [r0, #MP01PUD_OFFSET]
+
+	ldr	r1, [r0, #MP03CON_OFFSET]
+	bic	r1, r1, #0xFFFFFF
+	ldr	r2, =0x22222222
+	orr	r1, r1, r2
+	str	r1, [r0, #MP03CON_OFFSET]
+
+	ldr	r1, [r0, #MP03PUD_OFFSET]
+	ldr	r2, =0x3fff
+	bic	r1, r1, r2
+	str	r1, [r0, #MP03PUD_OFFSET]
+
+	ldr	r0, =S5PC110_NAND_BASE
+
+	ldr	r1, [r0, #NFCONF_OFFSET]
+	ldr	r2, =0x777F
+	bic	r1, r1, r2
+	ldr	r2, =NFCONF_VAL
+	orr	r1, r1, r2
+	str	r1, [r0, #NFCONF_OFFSET]
+
+	ldr	r1, [r0, #NFCONT_OFFSET]
+	ldr	r2, =0x707C7
+	bic	r1, r1, r2
+	ldr	r2, =NFCONT_VAL
+	orr	r1, r1, r2
+	str	r1, [r0, #NFCONT_OFFSET]
+
+	ldr	r1, [r0, #NFCONF_OFFSET]
+	orr	r1, r1, #0x70
+	orr	r1, r1, #0x7700
+	str     r1, [r0, #NFCONF_OFFSET]
+
+	ldr	r1, [r0, #NFCONT_OFFSET]
+	orr	r1, r1, #0x03
+	str     r1, [r0, #NFCONT_OFFSET]
+
+	adr	r0, ndn_msg
+	bl	uart_asm_puts
+	b	4f
+
+	pop	{pc}
 
 #define DMC0_CONCONTROL		0x00
 #define DMC0_MEMCONTROL 	0x04
@@ -324,3 +413,7 @@ ok_msg:
 err_msg:
 	.asciz "DRAM Mini-Test Failed\r\n"
 	.align
+ndn_msg:
+	.asciz "NAND Initialised\r\n"
+	.align
+

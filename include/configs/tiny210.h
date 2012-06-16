@@ -125,12 +125,27 @@
 #define DM9000_IO			(CONFIG_DM9000_BASE)
 #define DM9000_DATA			(CONFIG_DM9000_BASE+0x8)
 
+/* NAND Configuration */
+#define CONFIG_MTD_DEVICE		1
+#define CONFIG_MTD_PARTITIONS		1
+
+#define CONFIG_NAND			1
+#define CONFIG_SYS_MAX_NAND_DEVICE	1
+#define CONFIG_SYS_NAND_BASE 		0
+#define CONFIG_SYS_NAND_5_ADDR_CYCLE	1
+ 
+#define CONFIG_NAND_S5P8BIT		1
+#define CONFIG_SYS_S5P_NAND_HWECC	1
+#define CONFIG_SYS_NAND_ECCSIZE		512
+#define CONFIG_SYS_NAND_ECCSTEPS	4
+#define CONFIG_SYS_NAND_ECCBYTES	13
+
 /* Command Support */
 #include <config_cmd_default.h>
 #define CONFIG_CMD_MMC			1
 #define CONFIG_CMD_FAT			1
 #define CONFIG_CMD_EXT2			1
 #undef CONFIG_CMD_IMLS
-
+#define CONFIG_CMD_NAND			1
 
 #endif
