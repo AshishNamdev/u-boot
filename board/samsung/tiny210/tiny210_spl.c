@@ -29,6 +29,13 @@
 typedef u32(*copy_sd_mmc_to_mem)
 (u32 channel, u32 start_block, u16 block_size, u32 *trg, u32 init);
 
+typedef u32(*copy_nand_to_mem)
+(u32 block, u32 page, u32 *dest);
+
+#if !defined TINY210_SPL_BOOT_MMC && !defined TINY210_SPL_BOOT_NAND
+#error TINY210: No spl load source specified
+#endif
+
 void __spin(unsigned long d) {
 	int loops;
 	for (; d > 0; d --) {
@@ -51,6 +58,7 @@ void serial_putc(const char c)
 	*txh = c;
 }
 
+#ifdef TINY210_SPL_BOOT_MMC
 void copy_mmc_to_ram(unsigned int blk_offset, unsigned int blk_count, void *destination)
 {
 	ulong ch;
@@ -66,6 +74,34 @@ void copy_mmc_to_ram(unsigned int blk_offset, unsigned int blk_count, void *dest
 		ret = copy_bl2(2, blk_offset, blk_count, destination, 0);
 	}
 }
+#endif
+
+#ifdef TINY210_SPL_BOOT_NAND
+void copy_nand_to_ram(unsigned int offset, unsigned int size, void *destination)
+{
+	u32 page, sector;
+	copy_nand_to_mem copy_nand = (copy_nand_to_mem)(*(u32 *) (0xD0037F90));
+
+	sector = offset / CONFIG_SPL_NAND_SECT_SIZ;
+	page = (offset - (sector * CONFIG_SPL_NAND_SECT_SIZ)) / CONFIG_SPL_NAND_PAGE_SIZ;
+
+	while (size > 0) {
+		copy_nand(sector, page, destination);
+		page ++;
+		if ( ( (page * CONFIG_SPL_NAND_PAGE_SIZ) % CONFIG_SPL_NAND_SECT_SIZ ) == 0 ) {
+			page = 0;
+			sector ++;
+		}
+
+		if (size < CONFIG_SPL_NAND_PAGE_SIZ) {
+			size = 0;
+		} else {
+			size -= CONFIG_SPL_NAND_PAGE_SIZ;
+			destination += CONFIG_SPL_NAND_PAGE_SIZ;
+		}
+	}
+}
+#endif
 
 void board_init_f(unsigned long bootflag)
 {
@@ -77,7 +113,13 @@ void board_init_f(unsigned long bootflag)
 	int i;
 
 	serial_puts("Copying u-boot to ram\n");
+	#ifdef TINY210_SPL_BOOT_MMC
 	copy_mmc_to_ram(CONFIG_SPL_UBOOT_OFS, CONFIG_SPL_UBOOT_SIZ, dest);
+	#endif
+
+	#ifdef TINY210_SPL_BOOT_NAND
+	copy_nand_to_ram(CONFIG_SPL_UBOOT_OFS, CONFIG_SPL_UBOOT_SIZ, dest);
+	#endif
 
         /* Jump to U-Boot image */
 	*inform3 = 0x0000bead; /* Don't bother to reinit */
