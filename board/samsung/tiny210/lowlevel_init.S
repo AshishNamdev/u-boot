@@ -46,6 +46,7 @@ lowlevel_init:
 	popeq	{pc}
 
 	bl	leds_on
+	bl	mmc0_drv
 	bl	uart_asm_init
 	bl	nand_asm_init
 	bl	clocks_to_max
@@ -55,6 +56,14 @@ lowlevel_init:
 	bl	uart_asm_puts
 	
 	pop	{pc}
+
+mmc0_drv:
+	ldr	r0, =S5PC110_GPIO_BASE
+	ldr	r1, [r0, #0x1AC]
+	ldr	r2, =0x3FFFF
+	str	r2, [r0, #0x1AC]
+	
+	mov	pc, lr
 
 leds_on:
 	ldr	r0, =S5PC110_GPIO_BASE
