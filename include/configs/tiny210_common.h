@@ -119,6 +119,9 @@
 #define CONFIG_SYS_NAND_ECCSTEPS	4
 #define CONFIG_SYS_NAND_ECCBYTES	13
 
+#define DEFAULT_MTDID "nand0=nand"
+#define DEFAULT_MTDPARTS "mtdparts=nand:256k(u-boot),128k(u-boot-env),3m(kernel),-(rootfs)"
+
 /* Command Support */
 #include <config_cmd_default.h>
 #define CONFIG_CMD_MMC			1
@@ -126,8 +129,8 @@
 #define CONFIG_CMD_EXT2			1
 #define CONFIG_CMD_NAND			1
 #define CONFIG_CMD_MTDPARTS		1
+#define CONFIG_CMD_AUTOSCRIPT		1
 #undef CONFIG_CMD_IMLS
-
 
 #endif
 

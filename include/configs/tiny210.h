@@ -56,5 +56,11 @@
 #define DM9000_IO			(CONFIG_DM9000_BASE)
 #define DM9000_DATA			(CONFIG_DM9000_BASE+0x8)
 
+#define CONFIG_EXTRA_ENV_SETTINGS \
+	"bootdelay=0\0" \
+	"bootcmd=ext2load mmc 0:1 0x22000000 auto.scr; source 0x22000000\0" \
+	"mtdids=" DEFAULT_MTDID "\0" \
+	"mtdparts=" DEFAULT_MTDPARTS "\0"
+
 
 #endif
