@@ -26,8 +26,6 @@
 #include <config.h>
 #include <version.h>
 #include <asm/arch-s5pc1xx/cpu.h>
-#include "regs.h"
-
 
 _TEXT_BASE:
 	.word	CONFIG_SYS_TEXT_BASE

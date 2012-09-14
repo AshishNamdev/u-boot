@@ -55,8 +55,9 @@ int board_init(void)
 	gd->bd->bi_arch_number = CONFIG_MACH_TYPE;
 	gd->bd->bi_boot_params = (PHYS_SDRAM_1+0x100);
 
+#ifdef CONFIG_DRIVER_DM9000
 	dm9000_pre_init();
-
+#endif
 	return 0;
 }
 
