@@ -34,6 +34,11 @@ else
 COBJS-y += tiny210.o
 endif
 
+ifneq ($(CONFIG_SPL_BUILD),y)
+COBJS-$(CONFIG_TINY210_SDK) += motherboards/tiny210_sdk.o
+COBJS-$(CONFIG_TINY210_IDC1) += motherboards/indicomm_dc1.o
+endif
+
 SOBJS	:= lowlevel_init.o
 
 SRCS    := $(SOBJS:.o=.S) $(COBJS-y:.o=.c)

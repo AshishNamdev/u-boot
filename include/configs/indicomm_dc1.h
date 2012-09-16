@@ -28,6 +28,7 @@
 
 #define CONFIG_MACH_TYPE		MACH_TYPE_INDICOMM_DC
 #define MACH_TYPE_INDICOMM_DC		2458
+#define CONFIG_TINY210_IDC1		1
 
 #include "tiny210_common.h"
 

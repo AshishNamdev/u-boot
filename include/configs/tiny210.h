@@ -28,6 +28,7 @@
 
 #define CONFIG_MACH_TYPE		MACH_TYPE_TINY210
 #define MACH_TYPE_TINY210		2457
+#define CONFIG_TINY210_SDK		1
 
 #include "tiny210_common.h"
 
