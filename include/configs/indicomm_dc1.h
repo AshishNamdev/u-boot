@@ -44,9 +44,32 @@
 #define CONFIG_BOARD_NAME		"Indicomm DC1"
 #define CONFIG_IDENT_STRING		" for " CONFIG_BOARD_NAME
 
+/* Ethernet */
+#define CONFIG_SMC911X			1
+#define CONFIG_SMC911X_32_BIT		1
+#define CONFIG_SMC911X_BASE		(0x88000000)
+
+/* Environment */
 #define CONFIG_ENV_IS_IN_NAND		1
 #define CONFIG_ENV_SIZE			0x20000		/* 128KB */
 #define CONFIG_SYS_MMC_ENV_DEV		0
 #define CONFIG_ENV_OFFSET		(256 * 1024)	/* Third Sector */
+
+#define CONFIG_EXTRA_ENV_SETTINGS \
+	"mtdids=" DEFAULT_MTDID "\0" \
+	"mtdparts=" DEFAULT_MTDPARTS "\0"
+
+/* Turn on... */
+#define CONFIG_CMD_PING			1
+
+/* Turn off... */
+#undef CONFIG_GENERIC_MMC
+#undef CONFIG_MMC
+#undef CONFIG_S5P_MMC
+#undef CONFIG_DOS_PARTITION
+
+#undef CONFIG_CMD_MMC
+#undef CONFIG_CMD_FAT
+#undef CONFIG_CMD_EXT2
 
 #endif
